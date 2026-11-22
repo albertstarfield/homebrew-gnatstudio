@@ -14,7 +14,7 @@ class Gnatstudio < Formula
 
   def install
     root = Dir.glob("gnatstudio-*-linux-bin").first
-    odie "unexpected archive layout" if root.nil?
+    odie "unexpected archive layout: #{Dir.glob('*').first(12).inspect}" if root.nil?
     prefix.install Dir["#{root}/*"]
     bin.install_symlink prefix/"bin/gnatstudio" => "gnatstudio"
   end
