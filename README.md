@@ -1,6 +1,6 @@
 # GNAT Studio tap
 
-This tap ships GNAT Studio in two pieces. On macOS it installs the DMG published by the gnuada project on SourceForge as a cask. On Linux it installs the tarball from the AdaCore GitHub release as a formula. The two sources are separate because the AdaCore release currently has Linux and Windows binaries only; the macOS build lives in the SourceForge directories.
+This tap is maintained by `albertstarfield` as a redistribution convenience. The upstream owner is `AdaCore/gnatstudio`; the macOS DMG comes from the `gnuada` project on SourceForge. On macOS the tap installs that DMG as a cask. On Linux it installs the tarball from the AdaCore GitHub release as a formula. The two sources are separate because the AdaCore release currently has Linux and Windows binaries only; the macOS build lives in the SourceForge directories.
 
 ## One-line install
 
@@ -80,6 +80,44 @@ brew uninstall --cask gnatstudio
 brew uninstall gnatstudio
 brew untap albertstarfield/gnatstudio
 ```
+
+## FAQ
+
+**Why does Homebrew say the tap is untrusted?**
+
+Run `brew trust albertstarfield/gnatstudio`. Homebrew will not load packages from a new tap until you trust it.
+
+**Why does `brew audit Casks/gnatstudio.rb` fail?**
+
+Newer Homebrew versions want a token, not a path. Tap the checkout, trust it, then audit by name: `brew audit --strict --online --cask albertstarfield/gnatstudio/gnatstudio`.
+
+**Why does macOS refuse to open GNAT Studio?**
+
+The upstream DMG is not codesigned. Remove the quarantine attribute: `xattr -r -d com.apple.quarantine /Applications/GNATStudio.app`. Then open it again.
+
+**Why can't Apple Silicon run the current macOS build?**
+
+The SourceForge readme targets macOS 13 on x86_64 and does not provide an arm64 DMG. Use Rosetta, or install an older cask such as `gnatstudio@2025` if that build works for you. The Linux formula does have an aarch64 asset.
+
+**Why did the daily job fail with HTTP 403 "rate limit exceeded"?**
+
+The GitHub API rejects unauthenticated calls from shared runner IPs. The workflow sends `GH_TOKEN` as a bearer token. Export it if you run `scripts/update_gnatstudio.py` by hand.
+
+**Why did no pull request appear after a release?**
+
+The SPARK check needs both Linux assets and the macOS DMG. Check the log for `MISSING_LINUX_AARCH64` or `MISSING_MACOS_DMG`. Older AdaCore tags only ship x86_64 Linux, so they are skipped on purpose.
+
+**Why does the cask checksum differ from the one on SourceForge?**
+
+The 2025 and 2026 SourceForge directory metadata has no published SHA-256. The updater downloads the DMG and computes it. If the file was replaced upstream, rerun the update job and reopen the cask.
+
+**Why did the scheduled workflow stop running?**
+
+GitHub disables schedules in public repos after 60 days without activity and can drop runs near the top of the hour. The cron time is off-hour; a small commit or `workflow_dispatch` run reactivates it.
+
+## Upstream owner
+
+The tap owner is `albertstarfield`. That is just the Homebrew channel. The software owner is `AdaCore/gnatstudio`, with release assets in `evidence/gnatstudio-releases.json`. The macOS DMG is published by the separate `gnuada` project on SourceForge; its directory metadata is in `evidence/sf-2026-ventura.html`. This tap redistributes those binaries and does not build or sign them.
 
 ## Layout
 

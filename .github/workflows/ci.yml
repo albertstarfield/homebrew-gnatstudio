@@ -9,9 +9,15 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v7
+      - name: Tap local checkout
+        run: brew tap albertstarfield/gnatstudio "$GITHUB_WORKSPACE"
+      - name: Trust local tap
+        run: brew trust albertstarfield/gnatstudio
+      - name: Update Homebrew
+        run: brew update
       - name: Audit formula
-        run: brew audit --strict --online Formula/gnatstudio.rb
+        run: brew audit --strict --online albertstarfield/gnatstudio/gnatstudio
       - name: Audit cask
-        run: brew audit --strict --online --cask Casks/gnatstudio.rb
+        run: brew audit --strict --online --cask albertstarfield/gnatstudio/gnatstudio
       - name: Check style
-        run: brew style Formula/gnatstudio.rb Casks/gnatstudio.rb
+        run: brew style albertstarfield/gnatstudio

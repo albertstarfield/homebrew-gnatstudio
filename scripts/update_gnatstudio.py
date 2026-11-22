@@ -27,13 +27,13 @@ LINUX = {
 FORMULA_TEMPLATE = '''class Gnatstudio < Formula
   desc "Ada and SPARK integrated development environment"
   homepage "https://github.com/AdaCore/gnatstudio"
-  version "{version}"
+  # upstream owner: AdaCore/gnatstudio
+  # updater-version: {version}
 
-  on_arm do
+  if Hardware::CPU.arm?
     url "{linux_aarch64_url}"
     sha256 "{linux_aarch64_sha}"
-  end
-  on_intel do
+  else
     url "{linux_x86_64_url}"
     sha256 "{linux_x86_64_sha}"
   end
@@ -46,7 +46,7 @@ FORMULA_TEMPLATE = '''class Gnatstudio < Formula
   end
 
   test do
-    assert_predicate bin/"gnatstudio", :exist?
+    assert_path_exists bin/"gnatstudio"
   end
 end
 '''

@@ -6,6 +6,6 @@ cask "gnatstudio" do
   name "GNAT Studio"
   desc "Ada and SPARK integrated development environment"
   homepage "https://github.com/AdaCore/gnatstudio"
-
+  # upstream owner: gnuada SourceForge project
   app "GNATStudio.app"
 end
