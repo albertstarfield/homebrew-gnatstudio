@@ -18,6 +18,8 @@ jobs:
       - name: Audit formula
         run: brew audit --strict --online albertstarfield/gnatstudio/gnatstudio
       - name: Audit cask
+        env:
+          HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: brew audit --strict --online --cask albertstarfield/gnatstudio/gnatstudio
       - name: Check style
         run: brew style albertstarfield/gnatstudio
