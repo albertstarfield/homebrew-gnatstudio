@@ -3,10 +3,26 @@ name: Cask CI
 on:
   push:
   pull_request:
+  schedule:
+    - cron: "41 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
-  audit:
-    runs-on: macos-latest
+  smoke:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            kind: cask
+            target: albertstarfield/gnatstudio/gnatstudio
+          - os: ubuntu-latest
+            kind: formula
+            target: albertstarfield/gnatstudio/gnatstudio
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v7
       - name: Tap local checkout
@@ -15,11 +31,32 @@ jobs:
         run: brew trust albertstarfield/gnatstudio
       - name: Update Homebrew
         run: brew update
-      - name: Audit formula
-        run: brew audit --strict --online albertstarfield/gnatstudio/gnatstudio
-      - name: Audit cask
+      - name: Audit package
         env:
-          HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: brew audit --strict --online --cask albertstarfield/gnatstudio/gnatstudio
+          KIND: ${{ matrix.kind }}
+          TARGET: ${{ matrix.target }}
+        run: |
+          if [ "$KIND" = "cask" ]; then
+            brew audit --strict --online --cask "$TARGET"
+          else
+            brew audit --strict --online "$TARGET"
+          fi
       - name: Check style
-        run: brew style albertstarfield/gnatstudio
+        env:
+          TARGET: ${{ matrix.target }}
+        run: brew style "$TARGET"
+      - name: Install and report result
+        env:
+          KIND: ${{ matrix.kind }}
+          TARGET: ${{ matrix.target }}
+          RUNNER_OS_NAME: ${{ matrix.os }}
+        run: |
+          set +e
+          if [ "$KIND" = "cask" ]; then
+            brew install --cask "$TARGET"
+          else
+            brew install "$TARGET"
+          fi
+          code=$?
+          printf '### %s / %s\ninstall_exit=%s\n' "$RUNNER_OS_NAME" "$KIND" "$code" >> "$GITHUB_STEP_SUMMARY"
+          exit "$code"
