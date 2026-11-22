@@ -55,7 +55,7 @@ CASK_TEMPLATE = '''cask "gnatstudio" do
   version "{version},{build}"
   sha256 "{sha}"
 
-  url "{url}"
+  url "https://downloads.sourceforge.net/gnuada/#{version.csv.second}-Applications-GNATStudio.dmg"
   name "GNAT Studio"
   desc "Ada and SPARK integrated development environment"
   homepage "https://github.com/AdaCore/gnatstudio"
@@ -176,21 +176,12 @@ def render_formula(tag: str, linux: dict[str, dict[str, Any]]) -> str:
     return FORMULA_TEMPLATE.format(**values)
 
 
-def direct_download_url(url: str) -> str:
-    prefix = "https://sourceforge.net/projects/gnuada/files/"
-    if url.startswith(prefix):
-        tail = url[len(prefix) :]
-        return "https://downloads.sourceforge.net/project/gnuada/" + tail.removesuffix("/download")
-    return url
-
-
-def render_cask(dmg_url: str, dmg_name: str, sha: str) -> str:
+def render_cask(dmg_name: str, sha: str) -> str:
     build = re.search(r"(\d{8})", dmg_name)
     return CASK_TEMPLATE.format(
         version="2026.2a",
         build=build.group(1) if build else "latest",
         sha=sha,
-        url=direct_download_url(dmg_url),
     )
 
 
@@ -213,7 +204,7 @@ def main() -> int:
         print(f"updated Formula/gnatstudio.rb; DMG {dmg_name} checksum skipped")
         return 0
     sha = sha256_of(dmg_url)
-    CASK.write_text(render_cask(dmg_url, dmg_name, sha), encoding="utf-8")
+    CASK.write_text(render_cask(dmg_name, sha), encoding="utf-8")
     print(f"updated Casks/gnatstudio.rb with {dmg_name} sha256={sha}")
     return 0
 
