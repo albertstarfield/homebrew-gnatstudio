@@ -1,6 +1,6 @@
 # Humanizer pass-through attempts
 
-The local OpenAI-compatible endpoint at `http://localhost:1234/v1` is reachable. `GET /v1/models` returned HTTP 200 with model `humanizer-1B-OptiQ-4bit` (`evidence/local-v1-probe-parent.log:1`).
+The local OpenAI-compatible endpoint at `http://localhost:1234/v1` is reachable. `GET /v1/models` returned HTTP 200 with model `humanizer-1B-OptiQ-4bit` (`evidence/local-v1-probe-parent.log:2-3`).
 
 Two full README passes were made with `POST /v1/chat/completions`:
 
