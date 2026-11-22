@@ -23,8 +23,14 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v7
-      - name: Set up Homebrew
-        uses: Homebrew/actions/setup-homebrew@1f8e202ffddf94def7f42f6fa3a482e821489f9c
+      - name: Put Homebrew on PATH
+        run: |
+          if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
+            echo "/home/linuxbrew/.linuxbrew/bin" >> "$GITHUB_PATH"
+          fi
+          if [ -x /opt/homebrew/bin/brew ]; then
+            echo "/opt/homebrew/bin" >> "$GITHUB_PATH"
+          fi
       - name: Tap local checkout
         run: |
           brew untap albertstarfield/gnatstudio || true
