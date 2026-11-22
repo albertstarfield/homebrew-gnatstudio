@@ -45,7 +45,7 @@ jobs:
           TARGET: ${{ matrix.target }}
         run: |
           if [ "$KIND" = "cask" ]; then
-            brew audit --strict --online --except download --cask "$TARGET"
+            brew audit --strict --cask "$TARGET"
           else
             brew audit --strict --online --formula "$TARGET"
           fi
