@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 import subprocess
 import urllib.request
@@ -70,8 +71,18 @@ def fetch_text(url: str) -> str:
         return response.read().decode("utf-8", errors="replace")
 
 
+def api_headers() -> dict[str, str]:
+    headers = {"User-Agent": "AdaHomebrew/1.0", "Accept": "application/vnd.github+json"}
+    token = os.environ.get("GH_TOKEN", "")
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+    return headers
+
+
 def fetch_json(url: str) -> list[dict[str, Any]]:
-    payload = json.loads(fetch_text(url))
+    request = urllib.request.Request(url, headers=api_headers())
+    with urllib.request.urlopen(request, timeout=30) as response:
+        payload = json.load(response)
     if not isinstance(payload, list):
         raise TypeError("release endpoint did not return a list")
     return [item for item in payload if isinstance(item, dict)]

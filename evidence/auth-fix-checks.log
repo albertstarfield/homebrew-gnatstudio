@@ -1,0 +1,6 @@
+=== lint after auth fix ===
+All checks passed!
+ INFO 0 errors
+=== local runs after auth fix ===
+no update: NO_NEW_VERSION (current=2.1.1, latest=2.1.1)
+updated Formula/gnatstudio.rb; DMG 20260625-Applications-GNATStudio.dmg checksum skipped
