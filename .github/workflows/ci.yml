@@ -1,0 +1,17 @@
+name: Cask CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  audit:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Audit formula
+        run: brew audit --strict --online Formula/gnatstudio.rb
+      - name: Audit cask
+        run: brew audit --strict --online --cask Casks/gnatstudio.rb
+      - name: Check style
+        run: brew style Formula/gnatstudio.rb Casks/gnatstudio.rb

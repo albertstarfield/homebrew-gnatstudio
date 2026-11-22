@@ -1,0 +1,39 @@
+name: Update GNAT Studio
+
+on:
+  schedule:
+    - cron: "23 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      RUN_ID: ${{ github.run_id }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install GNAT
+        run: sudo apt-get update && sudo apt-get install -y gnat
+      - name: Build SPARK decision binary
+        run: gprbuild -P updater.gpr
+      - name: Check upstream releases
+        run: python3 scripts/update_gnatstudio.py
+      - name: Open pull request
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet; then
+            echo "No package change"
+            exit 0
+          fi
+          branch="auto/gnatstudio-$RUN_ID"
+          git checkout -b "$branch"
+          git add Casks/gnatstudio.rb Formula/gnatstudio.rb
+          git commit -m "chore: bump GNAT Studio packages"
+          git push origin "$branch"
+          gh pr create --fill --title "chore: bump GNAT Studio packages" --body "Daily upstream release check."

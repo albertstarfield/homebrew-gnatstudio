@@ -1,0 +1,24 @@
+=== gprbuild GNATStudio ===
+Setup
+   [mkdir]        object directory for project Updater
+Compile
+   [Ada]          main.adb
+   [Ada]          updater.adb
+Bind
+   [gprbind]      main.bexch
+   [Ada]          main.ali
+Link
+   [link]         main.adb
+gprbuild_exit=0
+=== gnatprove GNATStudio ===
+Phase 1 of 3: generation of data representation information ...
+Phase 2 of 3: generation of Global contracts ...
+Phase 3 of 3: flow analysis and proof ...
+Success: all checks proved (2 checks).
+Summary logged in /Users/albertstarfield/Documents/misc/AdaHomebrew/GNATStudio/obj/gnatprove/gnatprove.out
+gnatprove_exit=0
+=== decisions ===
+case=ready decision=NONE
+case=old decision=NO_NEW_VERSION
+case=noarm decision=MISSING_LINUX_AARCH64
+case=nodmg decision=MISSING_MACOS_DMG
