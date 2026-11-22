@@ -107,6 +107,24 @@ The cask removes the quarantine attribute automatically after install, so the ap
 
 The SourceForge readme targets macOS 13 on x86_64 and does not provide an arm64 DMG. Use Rosetta, or install an older cask such as `gnatstudio@2025` if that build works for you. The Linux formula does have an aarch64 asset.
 
+**Why does macOS show a Rosetta warning for GNAT Studio on macOS 26.4+ / 27?**
+
+The cask installs an x86_64 app, so on Apple Silicon it runs through Rosetta 2. Starting in macOS Tahoe 26.4, macOS notifies when an app that uses Rosetta launches, warning that the app will not open in a future release. Apple documents the control as a device-management restriction and says Rosetta remains available through macOS 27; starting with macOS 28, Rosetta is limited to certain older, unmaintained games. See [Apple: What's new for enterprise in macOS Tahoe 26](https://support.apple.com/en-us/124963) and [Apple: Using Intel-based apps on a Mac with Apple silicon](https://support.apple.com/en-us/102527).
+
+**How do I disable the Rosetta awareness notification on macOS 27?**
+
+The documented switch is the `allowRosettaUsageAwareness` key in the `com.apple.applicationaccess` restriction payload, set to `false`. On a managed Mac, ask the administrator to push that restriction. On a self-managed Mac, review and install a configuration profile that forces the same key, for example:
+
+```
+curl -fL -o ~/Downloads/DisableRosettaUsageAwareness.mobileconfig \
+  https://raw.githubusercontent.com/rtrouton/profiles/main/DisableRosettaUsageAwareness/DisableRosettaUsageAwareness.mobileconfig
+open ~/Downloads/DisableRosettaUsageAwareness.mobileconfig
+```
+
+Finish in System Settings > General > Device Management > Add. On macOS 27.2.1 the `profiles` command has no `install` verb; Apple directs users to the Device Management pane. See [rtrouton's profile and README](https://github.com/rtrouton/profiles/tree/main/DisableRosettaUsageAwareness) and [Apple: Change Device Management settings on Mac](https://support.apple.com/guide/mac-help/change-device-management-settings-mh35474/mac).
+
+A plain `defaults write com.apple.applicationaccess allowRosettaUsageAwareness -bool false` is **not** a supported equivalent: the setting is documented as a managed restriction, and on macOS 27.2.1 that domain is absent from the user's preferences. Installing the profile hides the warning only. It does not install Rosetta, make GNAT Studio arm64-native, or restore Rosetta support after macOS 27. If you only want less noise rather than hiding the warning, System Settings > Notifications has a per-app **Play sound for notification** switch; see [Apple: Notifications settings on Mac](https://support.apple.com/guide/mac-help/notifications-settings-mh40583/mac).
+
 **Why did the daily job fail with HTTP 403 "rate limit exceeded"?**
 
 The GitHub API rejects unauthenticated calls from shared runner IPs. The workflow sends `GH_TOKEN` as a bearer token. Export it if you run `scripts/update_gnatstudio.py` by hand.
