@@ -69,6 +69,12 @@ cask "gnatstudio" do
 
   app "GNATStudio.app"
 
+  postflight_steps do
+    run "/usr/bin/xattr",
+        args:         ["-dr", "com.apple.quarantine", "{{appdir}}/GNATStudio.app"],
+        must_succeed: false
+  end
+
   caveats do
     requires_rosetta
   end

@@ -93,7 +93,7 @@ Newer Homebrew versions want a token, not a path. Tap the checkout, trust it, th
 
 **Why does macOS refuse to open GNAT Studio?**
 
-The upstream DMG is not codesigned. Remove the quarantine attribute: `xattr -r -d com.apple.quarantine /Applications/GNATStudio.app`. Then open it again.
+The cask removes the quarantine attribute automatically after install, so the app should open without a manual step. If an older install still carries it, run `xattr -r -d com.apple.quarantine /Applications/GNATStudio.app` and open it again.
 
 **Why can't Apple Silicon run the current macOS build?**
 
