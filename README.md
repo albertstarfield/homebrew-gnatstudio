@@ -2,10 +2,24 @@
 
 This tap ships GNAT Studio in two pieces. On macOS it installs the DMG published by the gnuada project on SourceForge as a cask. On Linux it installs the tarball from the AdaCore GitHub release as a formula. The two sources are separate because the AdaCore release currently has Linux and Windows binaries only; the macOS build lives in the SourceForge directories.
 
+## One-line install
+
+macOS:
+
+```
+brew tap albertstarfield/gnatstudio && brew install --cask gnatstudio
+```
+
+Linux:
+
+```
+brew tap albertstarfield/gnatstudio && brew install gnatstudio
+```
+
 ## Add the tap
 
 ```
-brew tap <you>/gnatstudio
+brew tap albertstarfield/gnatstudio
 ```
 
 The repository is named `homebrew-gnatstudio`, so the short tap name is `gnatstudio`.
@@ -64,7 +78,7 @@ gnatprove --mode=all --level=4 -j0 -P updater.gpr
 ```
 brew uninstall --cask gnatstudio
 brew uninstall gnatstudio
-brew untap <you>/gnatstudio
+brew untap albertstarfield/gnatstudio
 ```
 
 ## Layout
@@ -77,4 +91,4 @@ brew untap <you>/gnatstudio
 - `.github/workflows/update.yml`, `.github/workflows/ci.yml` - daily check and validation
 - `evidence/` - raw release JSON, SourceForge HTML and the copied Homebrew docs
 
-Replace `<you>` with your GitHub owner or organisation name before publishing.
+The owner is `albertstarfield`.
