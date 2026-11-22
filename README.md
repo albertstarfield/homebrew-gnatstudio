@@ -1,3 +1,11 @@
+<p align="center">
+  <img src="assets/logo.png" alt="GNAT Studio logo" width="160" />
+</p>
+
+<p align="center">
+  <sub>Logo source: <a href="https://github.com/AdaCore/gnatstudio/blob/master/distrib/flatpak/gnatstudio.png">AdaCore/gnatstudio — distrib/flatpak/gnatstudio.png</a>. Credit: AdaCore and the GNAT Studio contributors. This Homebrew tap is independent and is not endorsed by AdaCore.</sub>
+</p>
+
 # GNAT Studio tap
 
 This tap is maintained by `albertstarfield` as a redistribution convenience. The upstream owner is `AdaCore/gnatstudio`; the macOS DMG comes from the `gnuada` project on SourceForge. On macOS the tap installs that DMG as a cask. On Linux it installs the tarball from the AdaCore GitHub release as a formula. The two sources are separate because the AdaCore release currently has Linux and Windows binaries only; the macOS build lives in the SourceForge directories.
