@@ -1,4 +1,4 @@
-name: Update GNAT Studio
+name: Fetch latest build for redistribution
 
 on:
   schedule:
