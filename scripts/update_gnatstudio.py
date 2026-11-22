@@ -59,8 +59,18 @@ CASK_TEMPLATE = '''cask "gnatstudio" do
   name "GNAT Studio"
   desc "Ada and SPARK integrated development environment"
   homepage "https://github.com/AdaCore/gnatstudio"
+  # upstream owner: gnuada SourceForge project
+  depends_on macos: ">= :monterey"
 
   app "GNATStudio.app"
+
+  caveats do
+    requires_rosetta
+  end
+
+  livecheck do
+    skip "Versioned SourceForge directory; the daily workflow updates this cask"
+  end
 end
 '''
 
@@ -166,13 +176,21 @@ def render_formula(tag: str, linux: dict[str, dict[str, Any]]) -> str:
     return FORMULA_TEMPLATE.format(**values)
 
 
+def direct_download_url(url: str) -> str:
+    prefix = "https://sourceforge.net/projects/gnuada/files/"
+    if url.startswith(prefix):
+        tail = url[len(prefix) :]
+        return "https://downloads.sourceforge.net/project/gnuada/" + tail.removesuffix("/download")
+    return url
+
+
 def render_cask(dmg_url: str, dmg_name: str, sha: str) -> str:
     build = re.search(r"(\d{8})", dmg_name)
     return CASK_TEMPLATE.format(
         version="2026.2a",
         build=build.group(1) if build else "latest",
         sha=sha,
-        url=dmg_url,
+        url=direct_download_url(dmg_url),
     )
 
 
